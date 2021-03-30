@@ -1,6 +1,8 @@
 # FirstWebPrj
 ChaekHwaJeom with 서강대 멋쟁이사자처럼, 위치기반도서공유플랫폼
 
+![image](https://user-images.githubusercontent.com/55684184/113016696-b36a5680-91b9-11eb-8e56-6c9262845f70.png)
+
 
 서비스 개요
  - 개발기간 : 2020.07-2020.12(배포)
