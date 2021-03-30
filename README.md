@@ -4,11 +4,11 @@ ChaekHwaJeom with 서강대 멋쟁이사자처럼, 위치기반도서공유플�
 ![image](https://user-images.githubusercontent.com/55684184/113016696-b36a5680-91b9-11eb-8e56-6c9262845f70.png)
 
 
-서비스 개요
+# **서비스 개요**
  - 개발기간 : 2020.07-2020.12(배포)
  - 기술스택 : Front(HTML,CSS,JavaScript), Back(Django, AWS RDS)
 
-서비스 기능
+# **서비스 기능**
  - 도서 검색 및 등록(네이버 검색 open API 활용)
  - 회원 주소 등록 기능(Daum 도로명 주소 검색 API 활용)
  - 소셜 회원가입/로그인 기능 + 추가 정보 등록 커스터마이징
@@ -16,7 +16,7 @@ ChaekHwaJeom with 서강대 멋쟁이사자처럼, 위치기반도서공유플�
  - 도서에 대한 리뷰 및 댓글 작성 기능
  - 내 서재 관리 및 이웃의 서재 열람 기능
 
-구현 내용
+# **구현 내용**
  - 네이버 검색 open API를 활용한 도서 검색
  - Daum 도로명 주소 검색 API를 활용한 주소 등록
  - slack API의 opensource library slacker를 활용한 메세지 보내기
