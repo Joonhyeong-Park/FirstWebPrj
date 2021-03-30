@@ -1,0 +1,44 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/book.css' %}">
+    <!-- 밑에 명시한 stylesheet의 css에서 변경된 사항들만 우선 적용됨 -->
+    <link rel="stylesheet" href="{% static 'css/neighbor_library.css' %}">
+</head>
+
+<body>
+    
+    <div class="neighbor-library-container">
+        {%if neighbor%}
+            {%for ne in neighbor%}
+            <div class="neighbor">
+                <div class="neighbor-info">
+                    <h3>{{ne.user.nickname}} 이웃님 </h3>
+                    <p>{{ne.user.sido}} {{ne.user.sigungu}} {{ne.user.dong}}</p>
+                </div>
+                <div class="neighbor-book">
+                    {%for book in ne.books%}
+                    <div class="book">
+                        <div class="front">
+                            <div class="cover" style="background-image: URL({{book.bookcover}});"
+                                onclick="location.href='/book_detail/{{book.pk}}';">
+                            </div>
+                        </div>
+                    </div>
+                    {%endfor%}
+                </div>
+            </div>
+            {%endfor%}
+        {%else%}
+        <div class="empty">
+            {{user.nickname}} 님의 동네에 등록된 서재가 없어요 :(
+        </div>
+        {%endif%}
+
+    </div>
+    
+</body>
+
+{% endblock %}

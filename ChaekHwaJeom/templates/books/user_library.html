@@ -1,0 +1,106 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/book.css' %}">
+    <link rel="stylesheet" href="{% static 'css/user_library.css'%}">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"/> -->
+</head>
+
+<script>
+    $(document).ready(function () {
+        // $('.book').popover();
+        $('.book').popover({
+            html: true,
+            container: 'body',
+            content: function () {
+                var id = $(this).attr('id')
+                return $('#user-book-detail-content-' + id).html();
+            }
+        });
+    });
+    // function showDetailPage(){
+    //     $('.cover').popover({
+    //         html: true,
+    //         content: function () {
+    //             return $('#user-book-detail-content').html();
+    //         }
+    //     });     
+    // }
+</script>
+
+<body>
+    <div class="modal fade" id="bookEditModal" tabindex="-1" role="dialog" aria-labelledby="bookEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookEditModalLabel">New message</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Recipient:</label>
+                  <input type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">Message:</label>
+                  <textarea class="form-control" id="message-text"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="user-library-container">
+        <div class="user">
+            <div class="user-info">
+                <div class="user-info-name-follower">
+                    <h3>{{user.username}}님의 서재</h3>
+                    <p>follower</p>
+                </div>
+                <div class="button-section-large">
+                    <button class="chaekhwajeom-button-large" onclick=location.href="{% url 'book_search' %}">
+                        <div class="button-text-section">
+                            <a class="button-text">도서 등록하기</a>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="user-book">
+                {%for book in books%}
+                <div id="user-book-detail-content-{{book.pk}}" class="detail-content" style="display: none">
+                    <p><b><{{book.title}}></b>, {{book.author}}</p>
+                    <p>{{book.review.book_review}}</p>
+                    <p>
+                        {%for i in book.review_rate%}
+                            ⭐️
+                        {%endfor%}
+                    </p>
+                    <p>
+                        <a href="{% url 'home' %}">수정하기</a>
+                        <button type="button" data-toogle="modal" data-target="#bookEditModal" data-pk="{{book.pk}}">수정하기</a>
+                    </p>
+                </div>
+
+                <div class="book" data-toogle="popover" id="{{book.pk}}">
+                    <div class="front">
+                        <div class="cover" style="background-image: URL({{book.bookcover}});">
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

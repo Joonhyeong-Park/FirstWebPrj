@@ -1,0 +1,95 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+{% load socialaccount %}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        body{
+            background-color:rgba(255, 228, 173, 0.15);
+;
+        }
+        .login-whole {
+            background-color: whitesmoke;
+            width: 40%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10%;
+            padding: 50px;
+            border-radius: 5%;
+            -webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+        }
+    
+        .login-form {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+            width: 80%;
+        }
+    
+        .login-title {
+            padding: 0 20px 20px 20px;
+            font-size: 25px;
+            text-align: center;
+            color: #4f8a69;
+    
+        }
+    
+        .login-button {
+            background-color: #4f8a69;
+            width: 100%;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 4%;
+            box-shadow: 1px 5px 10px rgba(0,0,0,0.4);
+        }
+        .login-last p {
+            text-align: center;
+            font-family: 'SCDream4';
+        }
+        .login-form input[type="text"],input[type="password"]{
+            text-align: center;
+            font-family: 'SCDream2';
+        }
+        @media screen and (max-width: 768px){
+            .login-whole{
+                width:100%;
+                font-size: 10px;
+            }
+            .login-title{
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<div class="login-whole">
+    <div class="login-title">로그인</div>
+    <form method="POST" class="login-form">
+        {%csrf_token%}
+        <p>
+            <input class="form-control" type="text" name="username" autofocus="" required="" id="id_username"
+                placeholder="eMail" aria-label="Username" aria-describedby="basic-addon1">
+        </p>
+        <p>
+            <input class="form-control" type="password" name="password" required="" id="id_password"
+                placeholder="Password" aria-label="Username" aria-describedby="basic-addon1">
+        </p>
+        <button type="submit" class="login-button">로그인</button><br><br>
+    </form>
+    <div class="login-last">
+        <p>새로 계정을 만드시겠습니까?
+            <a href="{% url 'register' %}"> 회원가입</a><br></p>
+        <p>구글 계정으로 로그인하시겠습니까?
+            <a href="{% provider_login_url 'google'%}"><img src="/../../static/images/google.png" width="30" height="30" alt=""></a>
+        </p>
+    </div>
+</div>
+
+{% endblock %}

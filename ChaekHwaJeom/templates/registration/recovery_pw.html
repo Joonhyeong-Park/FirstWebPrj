@@ -1,0 +1,13 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<!-- <form action = "{% url 'password_change' %}" method="POST"> -->
+<form action = "{% url 'sendmail' %}" method="POST">
+    <h1>비밀번호 리셋</h1>
+    {%csrf_token%}
+    {{form.as_p}}
+    <button type="submit">비밀번호 변경하기</button>
+    <!-- <a href = "{%url 'sendmail'%}">비밀번호 변경하기</a> -->
+</form>
+{% endblock %}

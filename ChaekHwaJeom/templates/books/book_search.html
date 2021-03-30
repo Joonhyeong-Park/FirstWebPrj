@@ -1,0 +1,224 @@
+{% extends 'books/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<head>
+  <link rel="stylesheet" href="{% static 'css/book.css' %}">
+  <link rel="stylesheet" href="{% static 'css/book_search.css'%}">
+</head>
+
+<script>
+  var isbn_value, index;
+
+  var page;
+  var newURL;
+
+  var initialRating = 0;
+  var starsTotal = 5;
+  $(document).on('show.bs.modal', '#bookRegisterModal', function (event) {
+    // alert('debug')  //modal 버튼 작동함
+
+    // 모달창에 데이터 넘기기
+    var button = $(event.relatedTarget)
+
+    // 도서 등록 시에 'book_register' view로 넘길 전역변수
+    isbn_value = button.data('isbn')
+    index = button.data('index')
+
+    // var isbn = $('#isbn').text()
+    // var isbn_arr = isbn.split(',')
+    // var idx = isbn_arr.length - 1
+
+    var modal = $(this)
+    modal.find('#modal-hidden-data').val(isbn_value)
+
+  })
+
+  function setPreviouspageUrl() {
+    var curURL = window.location.href;
+    page_info = curURL.indexOf('page');
+
+    var subURL = curURL.substr(page_info);
+    page = Number(subURL.split('=')[1]);
+
+    newURL = subURL;    // page=2인경우 page value없는 url값만 지정
+
+    if (page != 2) {
+      page = page - 1   // 이전 page number 지정
+      newURL = newURL + '?page=' + page;
+    }
+
+    alert(newURL);
+    window.location.replace(newURL);
+  }
+  function setNextpageUrl() {
+    var curURL = window.location.href;
+    page_info = curURL.indexOf('page');
+
+    // 첫 번째 page인 경우
+    if (page_info == -1) {
+      newURL = curURL + '?page=2';
+    }
+    else {
+      var subURL = curURL.substr(page_info);
+      page = Number(subURL.split('=')[1]) + 1;
+
+      newURL = curURL.substring(0, page_info - 1);
+      newURL = newURL + '?page=' + page;
+    }
+    // alert(newURL);
+    window.location.replace(newURL);
+
+    // if(typeof(history.pushState != "undefined")) {
+    //   history.pushState(null,null,newURL);
+    //   alert('pushstate debug');
+    // }
+    // else{
+    //   window.location.replace(newURL);
+    //   alert('replace debug');
+
+    // }
+  }
+
+</script>
+
+<div class="modal fade" id="bookRegisterModal" tabindex="-1" role="dialog" aria-labelledby="bookRegisterModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-chaekhwajeom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title name" id="bookRegisterModalLabel" style="display: none;">도서 등록하기</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-chaekhwajeom-body">
+        <form method="POST" action="{% url 'book_register' %}">
+          <input id="modal-hidden-data" name="isbnvalue" style="display: none;">
+          {%csrf_token%}
+          <!-- {{book_form.as_p}}
+          {{review_form.as_p}} -->
+
+          <div class="status-box">
+            <select name="status" id="id_status">
+              <option value="" selected="">도서 상태를 선택해주세요</option>
+              <option value="0">대여 가능</option>
+              <option value="1">예약 중</option>
+              <option value="2">대여 중</option>
+              <option value="3">대여 불가능</option>
+            </select>
+          </div>
+          <div class="review-textarea">
+            <textarea name="book_review" cols="40" rows="10" maxlength="100" id="id_book_review" placeholder="&#10;리뷰를 작성해주세요"></textarea>
+          </div>
+          <div class="review-star-rate">
+            <input type="radio" id="review-star-5" name="review-star" value="5"/>
+              <label for="review-star-5">☆</label>
+            <input type="radio" id="review-star-4" name="review-star" value="4"/>
+              <label for="review-star-4">☆</label>
+            <input type="radio" id="review-star-3" name="review-star" value="3"/>
+              <label for="review-star-3">☆</label>
+            <input type="radio" id="review-star-2" name="review-star" value="2"/>
+              <label for="review-star-2">☆</label>
+            <input type="radio" id="review-star-1" name="review-star" value="1"/>
+              <label for="review-star-1">☆</label>
+          </div>
+
+          <button type="submit" class="btn-chaekhwajeom">등록하기</button>
+        </form>
+      </div>
+      <!-- <div class="modal-footer">
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- isbn value를 array format으로 저장 (구분자 '|' ) -->
+<!-- index에 따라 parameter로 사용 -->
+{%if books%}
+<div id="isbn" style="display:none">
+  {%for book in books%}
+  {{book.isbn}},
+  {%endfor%}
+</div>
+<div id="isbn-pk" style="display:none">
+  {%for book in books%}
+  {{book.index}},
+  {%endfor%}
+</div>
+{%endif%}
+
+<body>
+  <div class="book-search-container">
+    <div class="search-bar">
+      <form method="GET">
+        <input type="text" name="query" placeholder="도서 정보를 검색하세요">
+        <button class="btn my-2 my-sm-0 btn-search-ver" type="submit" onclick=location.href="{% url 'book_search' %}">
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+            <path fill-rule="evenodd"
+              d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+          </svg>
+        </button>
+      </form>
+    </div>
+    <div class="search-result">
+      {%if books%}
+      <!-- pagenation previous 작동안함 -->
+      <div class="search-and-register">
+        {%for book in books%}
+        <div class="book-section">
+          <div class="button-section-small">
+            <button type="button" class="chaekhwajeom-button-small" data-toggle="modal" data-target="#bookRegisterModal"
+              data-index="{{book.index}}" data-isbn="{{book.isbn}}">
+              <div class="button-text-section">
+                <a class="button-text">등록하기</a>
+              </div>
+            </button>
+          </div>
+          <div class="book">
+            <div class="front">
+              <div class="cover" style="background-image: URL({{book.image}}); ">
+              </div>
+            </div>
+          </div>
+          <div class="book-info">
+            <div id="title">
+              <div id="info">제목 </div>
+              <div id="info-result">{{book.title}}</div>
+            </div>
+            <div id="author">
+              <div id="info">작가 </div>
+              <div id="info-result">{{book.author}}</div>
+            </div>
+            <div id="publisher">
+              <div id="info">출판사 </div>
+              <div id="info-result">{{book.publisher}}</div>
+            </div>
+          </div>
+        </div>
+        {%endfor%}
+        {%if books.has_next%}
+        <div class="pagination-container">
+          <div class="pagination">
+            <button type="button" class="btn-pagination" onclick="setNextpageUrl();">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-right-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        {%endif%}
+      </div>
+
+
+      {%endif%}
+    </div>
+
+  </div>
+</body>
+
+{% endblock %}

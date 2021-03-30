@@ -1,0 +1,13 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+<form action="{% url 'edit_address' %}" method="POST"></form>
+<p>현재 주소: {{user.sido}} {{user.sigungu}} {{user.dong}}</p>
+    {% include 'registration/edit_address.html' %}
+     <!-- 
+        button에, 주소창에 있는 주소 사용하는 action걸기 
+        기존 address.html에 있는 주소사용하기 버튼 빼구 edit.html에 있는 버튼 써야함
+    -->
+</form>
+
+{% endblock %}

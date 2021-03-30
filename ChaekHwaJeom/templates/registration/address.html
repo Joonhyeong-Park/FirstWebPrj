@@ -1,0 +1,91 @@
+{% load static %}
+
+<head>
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6e400790d87a7654489eaacf3200616&libraries=services"></script>
+    <script>
+        var mapContainer = document.getElementById('map'),
+            mapOption = {
+                center: new daum.maps.LatLng(37.537187, 127.005476),
+                level: 5
+            };
+
+        var map = new daum.maps.Map(mapContainer, mapOption);
+        var geocoder = new daum.maps.services.Geocoder();
+
+        function searchAddress() {
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    //도로명 주소(문자열)
+                    var roadAddr = data.roadAddress;
+                    var jibunAddr = data.jibunAddress;
+
+                    document.getElementById("address").value = jibunAddr;
+
+                    geocoder.addressSearch(data.address, function (results, status) {
+                        if (status === daum.maps.services.Status.OK) {
+                            //위도, 경도
+                            var result = results[0]; //첫번째 결과의 값을 활용
+                            var coords = new daum.maps.LatLng(result.y, result.x);
+
+                            mapContainer.style.display = "block";
+                            map.relayout();
+                            map.setCenter(coords);
+
+                            var circle = new daum.maps.Circle({
+                                center: new daum.maps.LatLng(result.y, result.x),
+                                radius: 300,
+                                strokeOpacity: 0.5,
+                                strokeStyle: 'dashed',
+                                fillColor: '#BABABA',
+                                fillOpacity: 0.5
+
+                            });
+                            circle.setMap(map);
+                        }
+                    });
+                }
+            }).open();
+        }
+
+        function postAddress() {
+            var addr = document.getElementById("address").value;
+            var arrayAddr = addr.split(' ');
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'set_address' %}",
+                data: {
+                    'csrfmiddlewaretoken': '{{csrf_token}}',
+                    'sido': arrayAddr[0],
+                    'sigungu': arrayAddr[1],
+                    'dong': arrayAddr[2],
+                },
+                success: function () {
+                    alert("saved");
+                    window.location.href = "{% url 'home' %}";
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+
+
+        }
+    </script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/address.css' %}">
+</head>
+<body>
+    <p>나의 동네 등록</p>
+    <div class="address_box">
+        <input type="text" id="address" placeholder="주소">
+        <input type="button" onclick="searchAddress()" value="주소 검색">
+        <input type="button" onclick="postAddress()" value="주소 사용하기"><br><br>
+        <div id="map"
+            style="width:500px;height:500px;margin-top:10px; margin-right:auto; margin-left:auto; display: none"></div>
+    </div>
+</body>
+
+

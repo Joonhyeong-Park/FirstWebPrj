@@ -1,0 +1,19 @@
+  ### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+media
+../myvenv/
+upload/
+/secret_key.json
+/db_sqlite3
+.DS_Store
+.DS_Store?
+
+**/migrations/**
+!**/migrations/
+!**/migrations/__init__.py
+/static
+.local

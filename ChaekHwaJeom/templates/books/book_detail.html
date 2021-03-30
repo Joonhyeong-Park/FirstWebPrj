@@ -1,0 +1,338 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/book.css' %}">
+    <link rel="stylesheet" href="{% static 'css/book_detail.css' %}">
+    <style>
+        span.stars{
+            background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat right 0;
+            background-size: auto 100%;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            text-indent: -9999px;
+            cursor: pointer;
+        }
+        span.stars.on{background-position:0 0;}
+        .book_rate{
+            color: #ffd600;  
+        }
+        @media screen and (max-width: 767px){
+
+        .info{
+            font-size: 18px;
+            display: block;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .detail_container{
+            width: 100%;
+        }
+        .booktrade{
+            display: block;
+        }
+        .neighbor_name{
+            color:#4F8A69; 
+            display:inline-block;
+             font-size: 25px;
+        }
+        .neighbor{
+            font-size: large;
+        }
+        .cover{
+            width: 100px;
+            height: 200px;
+        }
+    }
+        @media screen and (min-width: 768px) and (max-width: 1023px){
+        .neighbor_name{
+            color:#4F8A69; display:inline-block; font-size: 30px;
+        }
+        .neighbor{
+            font-size: large;
+        }
+        .like_number{
+            position: relative;
+            right: 25px;
+            top: 15px;
+        }
+
+        .info{
+            margin-left: 20px;
+        }
+        .book{
+            margin-top: 50px !important;
+        }
+        .book_like{
+            display: block;
+        }
+        .detail_container {
+            z-index: 1;
+            perspective: 3000px;
+            /*화면젼환 효과*/
+            /* display : inline-flex; */
+            display: inline-flex;
+            padding-inline-start: 60px;
+            position: relative;
+            right: 3%;
+        }
+
+        .detail_container .book {
+            display: inline-flex;
+            margin-left: 80px;
+            margin-right: 80px;
+            margin-top: 0;
+        }
+
+        .detail_container .info {
+            display: inline-flex;
+            flex-direction: column;
+            margin-left: 100px;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        .detail_container .info p {
+            font-size: larger;
+            opacity: 0.8;
+        }
+        .booktrade{
+            display: flex;
+        }
+        .book_like{
+            display: flex;
+        }
+        .like_number{
+            margin-left: 20px;
+        }
+        .neighbor_name{
+            color:#4F8A69; display:inline-block; font-size: 30px;
+        }
+        .neighbor{
+            font-size: 30px;
+        }
+        .cover{
+            width: 240px; height: 360px;
+        }
+    }
+        @media screen and (min-width: 1024px) and (max-width: 2000px){
+        .like_number{
+            position: relative;
+            right: 25px;
+            top: 15px;
+        }
+
+        .info{
+            margin-left: 20px;
+        }
+        .book{
+            margin-top: 50px !important;
+        }
+        .book_like{
+            display: block;
+        }
+        .detail_container {
+            z-index: 1;
+            perspective: 3000px;
+            /*화면젼환 효과*/
+            /* display : inline-flex; */
+            display: inline-flex;
+            padding-inline-start: 60px;
+            position: relative;
+            right: 3%;
+        }
+
+        .detail_container .book {
+            display: inline-flex;
+            margin-left: 80px;
+            margin-right: 80px;
+            margin-top: 0;
+        }
+
+        .detail_container .info {
+            display: inline-flex;
+            flex-direction: column;
+            margin-left: 100px;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        .detail_container .info p {
+            font-size: larger;
+            opacity: 0.8;
+        }
+        .booktrade{
+            display: flex;
+        }
+        .book_like{
+            display: flex;
+        }
+        .like_number{
+            margin-left: 20px;
+        }
+        .neighbor_name{
+            color:#4F8A69; display:inline-block; font-size: 40px;
+        }
+        .neighbor{
+            font-size: 40px;
+        }
+        .cover{
+            width: 240px; height: 360px;
+        }
+        .booktopic{
+            font-size: 20px;
+        }
+        .info{
+            font-size: 20px;
+        }
+        .front>div {
+            width: 300px !important;
+            height: 450px !important;
+        }
+    }
+    </style>
+</head>
+
+<script>
+    $(document).on('show.bs.modal', '#sharingModal', function (event) {
+        // 모달창에 데이터 넘기기
+        var button = $(event.relatedTarget)
+
+        // 도서 등록 시에 'book_register' view로 넘길 전역변수
+        book_pk = button.data('book')
+        neighbor_pk = button.data('neighbor')
+        // alert(book_pk);
+        // alert(neighbor_pk);
+
+        var modal = $(this)
+        modal.find('#hidden-book-pk').val(book_pk)
+        modal.find('#hidden-neighbor-pk').val(neighbor_pk)
+
+  })
+</script>
+<body>
+<div class="modal fade" id="sharingModal" tabindex="-1" role="dialog" aria-labelledby="sharingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sharingModalLabel">채팅서비스 가이드라인</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <input id="hidden-book-pk" name="book" style="display: none;">
+            <input id="hidden-neighbor-pk" name="neighbor" style="display: none;">
+            <div class="modal-chat-guideline">
+                <div class="manager">
+                    <h4>서비스 사용 간에 불편했던 점이 있으신가요?😭</h4>
+                    <h4>해당 유저가 다음 사항에 해당한다면, 저희에게 알려주세요</h4>
+                    <hr>
+                </div>
+                <div class="user">
+                    <p><b>1. 책을 빌리기 전 이웃에게 안부를 물어주세요.</b></p>
+                    <p><b>2. 책을 받는 방식은 다양할 수 있여요.</b>
+                        <br>예를 들어, 아파트 우편함을 이용해 주고 받을 수 있죠. 이웃과 소통하여 안전하게 책을 주고 받으세요.
+                    </p>
+                    <p><b>3. 불량 채팅을 했어요 (나쁜 말, 못된 말 etc)</b>
+                        <br>소중한 책이 훼손되면 마음이 아파요 :(
+                    </p>
+                    <p><b>4. 책을 반납할 때, 책에 대한 소감을 짧게 전해주세요.</b>
+                        <br>당신의 한 마디에 보람을 느낄 수 있답니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary">
+            <a href="{% url 'sharing' book_pk=book.pk neighbor_pk=neighbor.pk %}" style="color: white;">네. 알겠습니다 😀</a>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="section">
+        <script>
+            var neighbor_pk = "{{neighbor.pk}}";
+        </script>
+        
+        <p class="neighbor">{{neighbor.nickname}} 이웃님의 도서입니다</p>
+
+        <button type="button" class="chaekhwajeom-button-small" data-toggle="modal" data-target="#sharingModal"
+        data-book="{{book.pk}}" data-neighbor="{{neighbor.pk}}">
+            <div class="button-text-section">
+                <a class="button-text">대여 신청하기</a>
+            </div>
+        </button>
+
+    </div>
+    <div class="detail_container">
+        {%if book%}
+        <script>
+            var book_pk = "{{book.pk}}";
+        </script>
+        <div class="book">
+            <div class="front">
+                <div class="cover" style="background-image: URL({{book.bookcover}});">
+                </div>
+            </div>
+        </div>
+        <div class="info">
+            <p class="booktopic" style=" color:#4F8A69;">기본 정보</p>
+            <p class="booktitle">제목 : {{book.title}}</p>
+            <p class="author">작가 : {{book.author}}</p>
+            <p class="booktopic" style="color:#4F8A69;">대여가 가능한가요?</p>
+            <div class="booktrade">
+                <p class="status" style="margin: 20px;">상태 : {{book.get_status_display}}</p>
+            </div>
+            {%if review%}
+            <p class="booktopic" style="color:#4F8A69;">{{neighbor.nickname}} 이웃님의 감상평</p>
+            <p class="book_rate" style="font-size: 2.5rem;">
+                {%for i in rate%}
+                ★
+                {%endfor%}
+                {%for i in rate_blank %}
+                ☆
+                {%endfor%}
+            </p>
+            <p class="book_review">"{{review.book_review}}"</p>
+            <div class="book_like">
+                <a class="btn like" name="{{ review.pk }}" value="Like">
+                    <img src="../../static/images/like.png" width="30" height="30"></a>
+                <p class="like_number" id="count-{{ review.pk }}">
+                    &nbsp;{{ review.likes_user.all.count }}</p>
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script type="text/javascript">
+                $(".like").click(function () { // .like 버튼을 클릭 감지
+                    var pk = $(this).attr('name')
+                    $.ajax({ // ajax로 서버와 통신
+                        type: "POST", // 데이터를 전송하는 방법
+                        url: "{% url 'like' %}", // 통신할 url을 지정
+                        data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 video인지 알 수 있음
+                        dataType: "json",
+                        success: function (response) { // 성공
+                            alert(response.message);
+                            $("#count-" + pk).html("&nbsp;" + response.likes_count); // 좋아요 개수 변경
+                        },
+                        error: function (request, status, error) { // 실패
+                            alert("로그인이 필요합니다.")
+                            window.location.replace("{% url 'login' %}") // 로그인 페이지로 넘어가기
+                        },
+                    });
+                })
+            </script>
+            {%else%}
+            {%endif%}
+        </div>
+        {%else%}
+        {%endif%}
+    </div>
+
+</body>
+
+{% endblock %}

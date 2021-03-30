@@ -1,0 +1,48 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/book.css' %}">
+    <link rel="stylesheet" href="{% static 'css/book_search.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main_search.css' %}">
+</head>
+
+<body>
+    <div class="main-search-container">
+        {%if books%}
+        <div class="book-section">
+            {%for book in books%}
+            <div class="book-item">
+                <div class="book">
+                    <div class="front">
+                        <div class="cover" style="background-image: URL({{book.bookcover}});" 
+                        onclick="location.href='/book_detail/{{book.pk}}';"></div>
+                    </div>
+                </div>
+                <div class="book-info">
+                    <div id="neighbor">
+                        <div id="neighbor-nickname">🧚🏻‍♂️{{book.user}}&nbsp</div>
+                        이웃님의 도서
+                        <div id="neighbor-address"><br><br>{{book.user.sido}} {{book.user.sigungu}} {{book.user.dong}}</div>
+                    </div>
+                    <div id="title">
+                        <div id="info">제목 </div>
+                        <div id="info-result">{{book.title}}</div>
+                      </div>
+                      <div id="author">
+                        <div id="info">작가 </div>
+                        <div id="info-result">{{book.author}}</div>
+                      </div> 
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+        {%else%}
+        <div class="empty">
+            책화점에는 검색하신 도서가 존재하지 않습니다 :(
+        </div>
+        {%endif%}
+    </div>
+</body>
+{% endblock %}

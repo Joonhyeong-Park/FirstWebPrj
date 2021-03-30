@@ -1,0 +1,60 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+    <link rel = "stylesheet" href="{% static 'css/service_manual.css'%}">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+    <script>
+    function collapseAll() {
+        $(".collapsible-header").removeClass(function () {
+            return "active";
+        });
+        $(".collapsible").collapsible({ accordion: true });
+        $(".collapsible").collapsible({ accordion: false });
+    }
+    function expandAll() {
+        $(".collapsible-header").addClass("active");
+        $(".collapsible").collapsible({ accordion: false });
+    }
+    </script>
+
+    <div class="service_manual">📣 책화점 서비스 가이드 📣</div>
+    <div class="container">
+          <a class="open_button" onClick="expandAll();">모두 열기</a>
+          <a class="close_button" onClick="collapseAll();">모두 닫기</a>
+                <ul class="collapsible" data-collapsible="expandable">
+                    <li>
+                      <div class="collapsible-header"><i class="mdi-navigation-chevron-right"></i>
+                        📖 책장에서 잊혀져 가는 책을 책화점 서재에 등록해주세요
+                      </div>
+                      <div class="collapsible-body" style="opacity: 0.7;">
+                        <p>같은 동(ex. 마포구 대흥동)에 사는 이웃님이 평소 읽어보고 싶었던 책을 가지고 있었을지도 몰라요.</p>
+                        <p>인생책을 빌려주고, 이웃의 반응을 확인해본다면 더욱 멋진 독서 경험이 될지도 모르잖아요?</p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="collapsible-header"><i class="mdi-navigation-chevron-right"></i>
+                        📖 주소를 등록하면 주변 이웃들의 책을 우선적으로 보여줘요
+                      </div>
+                      <div class="collapsible-body" style="opacity: 0.7;">
+                        <p>같은 동을 등록한 이웃들의 서재를 우선적으로 보여주어, 관심 있는 책을 보유한 이웃에게 채팅을 신청해보세요.
+                        <p>도서관에서 책꽂이 사이사이를 거닐다 우연히 집어들었던 책이 인생책이 된 경험 있으신가요?</p>
+                        <p>책화점은 이제 이웃들의 책장에 꽂혀 있는 수많은 책들을 모아서 회원님에게 커다란 도서관을 만들어 드릴 계획이에요.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="collapsible-header"><i class="mdi-navigation-chevron-right"></i>
+                        📖 불량 유저를 신고해주세요
+                      </div>
+                      <div class="collapsible-body" style="opacity: 0.7;">
+                        <p>이웃에게 책을 빌려주었는데, 책이 훼손되어 돌아왔나요 ㅠ.ㅠ</p>
+                        <p>회원님의 마음을 아프게 해드려 너무 죄송합니다.</p>
+                        <p>신고해주시면, 커뮤니티 매니저가 즉시 확인하여 정의의 심판을 내려드리겠습니다!</p>
+                      </div>
+                    </li>
+                </ul>
+    </div>
+
+  
+{% endblock %}
+

@@ -1,0 +1,5 @@
+<form method="POST">
+    {%csrf_token%}
+    {{report_form.as_p}}
+    <button type="submit">신고 접수하기</button>
+</form>

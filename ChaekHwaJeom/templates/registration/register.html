@@ -1,0 +1,38 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+  <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+
+<body>
+  <div class="register-whole">
+    <form method="POST" class="register-form">
+      <div class="register-form-box">
+        <div class="register-title">회원가입</div>
+        {% csrf_token %}
+        <p> <input type="email" name="email" maxlength="254" required="" id="id_email" class="form-control my-input"
+            placeholder="Email" width: 15px></p>
+        <p> <input type="text" name="password" maxlength="128" required="" id="id_password"
+            class="form-control my-input" placeholder="Password"></p>
+        <p> <input type="text" name="username" maxlength="20" required="" id="id_username" class="form-control my-input"
+            placeholder="Name">
+        </p>
+        <p> <input type="text" name="nickname" maxlength="200" required="" id="id_nickname"
+            class="form-control my-input" placeholder="Nickname"></p>
+
+        <p><label for="id_profileimage">프로필이미지: </label>
+          <input type="file" name="profileimage" accept="image/*" id="id_profileimage"> </p>
+
+        <button type="submit" class="button1">Sign Up</button>
+      </div>
+    </form>
+  </div>
+</body>
+
+{% endblock %}

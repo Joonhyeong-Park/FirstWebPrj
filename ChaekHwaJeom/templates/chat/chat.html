@@ -1,0 +1,170 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/book.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+</head>
+
+<body>
+    <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">신고 접수하기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-report">
+                        <form method="POST" action="{% url 'report' %}">
+                            {%csrf_token%}
+                            <div class="report-username">
+                                <select name="user" required="" id="id_user">
+                                    <option value="" selected="">신고할 이웃을 선택해주세요</option>
+                                    {%for key, value in all_user.items%}
+                                    <option value="{{key}}">{{value}}</option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                            
+                            <div class="report-checkbox">
+                                <div id="checkbox">
+                                    <input type="checkbox" name="report1" id="id_report1" value="True"/>
+                                    <label for="id_report1">책을 훼손해서 반납했어요 </label>
+                                </div>
+                                <div id="checkbox">
+                                    <input type="checkbox" name="report2" id="id_report2" value="True"/>
+                                    <label for="id_report2">책을 반납하지 않아요(잠수, 연락 안받기 etc) </label><br>
+                                </div>
+                                <div id="checkbox">
+                                    <input type="checkbox" name="report3" id="id_report3" value="True"/>
+                                    <label for="id_report3">불량채팅을 했어요(나쁜 말, 못된 말 etc) </label>
+                                </div>
+
+                            </div>
+
+                            <div class="report-content">
+                                <textarea name="content" cols="20" rows="10" maxlength="100" id="id_content" placeholder="&#10;신고 내용을 입력해주세요"></textarea>
+                            </div>
+                            <button type="submit" class="btn-report">신고할래요 😡</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-alert">
+            <!-- notify modal -->
+            <button type="button" class="chat-alert-ver" data-toggle="modal" data-target="#reportModal">
+                <div class="button-text-section">
+                    <svg width="1.0625em" height="1em" viewBox="0 0 17 16" class="bi bi-exclamation-triangle-fill"
+                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                    </svg>
+                </div>
+            </button>
+        </div>
+        {%if sharing%}
+        <div class="chat-list">
+            {%if ongoing%}
+            <div class="chat-ongoing">
+                {%for chat in ongoing%}
+                <div class="ongoing-finished-info">
+                    <div id="neighbor-name">{{chat.username}} 이웃님</div>
+                    <div class="neighbor-book-section">
+                        {%for s in chat.sharing_info%}
+                        <div class="neighbor-book">
+                            {%for key,value in s.items%}
+                            <div class="book-thumbnail">
+                                <div class="book">
+                                    <div class="front">
+                                        <div class="cover" style="background-image: URL({{value.bookcover}});"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="book-info">
+                                <div id="title">
+                                    <div id="info-result">{{value.title}}</div>
+                                </div>
+                                <div id="book-status" onclick="location.href='{% url 'chatroom' sharing_pk=key %}';">
+                                    <div id="book-status-button">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left-right"
+                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
+                                    </svg>
+                                    진행중
+                                    </div>
+                                </div>
+                                <div id="book-status-change" onclick="location.href='{% url 'set_sharing_state' sharing_pk=key %}'">
+                                    <div id="book-status-change-button">완료</div>
+                                </div>
+                            </div>
+                            {%endfor%}
+                        </div>
+                        {%endfor%}
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+            {%endif%}
+            {%if finished%}
+            <div class="chat-finished">
+                {%for chat in finished%}
+                <div class="ongoing-finished-info">
+                    <div id="neighbor-name">{{chat.username}} 이웃님</div>
+                    <div class="neighbor-book-section">
+                        {%for s in chat.sharing_info%}
+                        <div class="neighbor-book">
+                            {%for key,value in s.items%}
+                            <div class="book-thumbnail">
+                                <div class="book">
+                                    <div class="front">
+                                        <div class="cover" style="background-image: URL({{value.bookcover}});"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="book-info">
+                                <div id="title">
+                                    <div id="info-result">{{value.title}}</div>
+                                </div>
+                                <div id="book-status" onclick="location.href='{% url 'chatroom' sharing_pk=key %}';">
+                                    <div id="book-status-button">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2-all"
+                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M12.354 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                        <path
+                                            d="M6.25 8.043l-.896-.897a.5.5 0 1 0-.708.708l.897.896.707-.707zm1 2.414l.896.897a.5.5 0 0 0 .708 0l7-7a.5.5 0 0 0-.708-.708L8.5 10.293l-.543-.543-.707.707z" />
+                                    </svg>
+                                    진행완료
+                                    </div>
+                                </div>
+                            </div>
+                            {%endfor%}
+                        </div>
+                        {%endfor%}
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+            {%endif%}
+        </div>
+        {%else%}
+        <div class="empty">
+            {{user.nickname}} 님! 아직 진행 중인 거래가 없으시네요! :(
+        </div>
+        {%endif%}
+    </div>
+</body>
+
+{% endblock %}

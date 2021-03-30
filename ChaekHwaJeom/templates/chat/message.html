@@ -1,0 +1,41 @@
+{% extends 'books/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <!-- <link rel="stylesheet" href="{% static 'css/book.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/message.css' %}">
+</head>
+
+<body>
+        <div class="chat-room">
+            <div id="list-message">
+                <div id="list-title">
+                    <h2>📩 {{receiver}}님과의 채팅 📩</h2>
+                </div>
+                <div id="message-log">
+                    {%for message in messages%}
+                    <p>{{message.sender}} (이)가 {{message.receiver}}에게 : {{message.content}}</p>
+                    {%endfor%}
+                </div>
+            </div>
+            <div id="send-message">
+                <div id="send-title">
+                    <h2>📩</h2>
+                    <form method="POST">
+                        {%csrf_token%}
+                        <textarea name="content" cols="40" rows="10" class="form-control" placeholder="메세지를 작성해주세요" maxlength="100" required="" id="id_content"></textarea>
+                    <div class="send-action">
+                        <!-- <p onclick="this.form.submit()">전송하기</p> -->
+                        <input type="submit" value="전송하기"/>
+                    </div>
+                </form>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+{% endblock %}
